@@ -29,7 +29,8 @@ public class Member extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static Member createMember(JoinFormDto joinFormDto, PasswordEncoder passwordEncoder) {
+    public static Member createMember(JoinFormDto joinFormDto, PasswordEncoder passwordEncoder
+    ) {
         Member member = new Member();
         member.setName(joinFormDto.getName());
         member.setEmail(joinFormDto.getEmail());

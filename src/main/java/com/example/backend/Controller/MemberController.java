@@ -39,7 +39,7 @@ public class MemberController {
         }
 
         try {
-            Member member = Member.createMember(joinFormDto, passwordEncoder);
+          Member member = Member.createMember(joinFormDto, passwordEncoder);
             memberService.saveMember(member);
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -48,16 +48,15 @@ public class MemberController {
         return "redirect:/";
     }
 
-    // 로그인 페이지
+//     로그인 페이지
     @GetMapping("/login")
     public String memberLogin() {
-        return "member/loginForm";
+        return "member/Login";
     }
-
-    // 로그인 실패
+        // 로그인 실패
     @GetMapping("/login/fail")
     public String memberLoginFail(Model model) {
         model.addAttribute("loginFailMsg", "아이디 또는 비밀번호를 확인해주세요.");
-        return "member/loginForm";
+        return "member/Login";
     }
 }
