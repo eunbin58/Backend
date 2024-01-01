@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-
-@Getter @Setter
-public class JoinFromDto {
+@Getter
+@Setter
+public class JoinFormDto {
 
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;

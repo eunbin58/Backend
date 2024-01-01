@@ -1,42 +1,63 @@
 package com.example.backend.Controller;
 
+import com.example.backend.Dto.JoinFormDto;
 import com.example.backend.Entity.Member;
+import com.example.backend.Service.MemberService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/member")
 public class MemberController {
-    private final MemberServiceImpl memberServiceImpl;
 
+    private final PasswordEncoder passwordEncoder;
+    private final MemberService memberService;
 
-    public MemberController(MemberServiceImpl memberServiceImpl) {
-        this.memberServiceImpl= memberServiceImpl;
+    // 회원가입 페이지
+    @GetMapping("/new")
+    public String memberJoinForm(JoinFormDto joinFormDto, Model model) {
+        model.addAttribute("joinFormDto", joinFormDto);
+        return "member/joinForm";
     }
 
-    @RequestMapping("/")
-    public String home(Model model) {
-        return "home";
-    }
+    // 회원가입
+    @PostMapping("/new")
+    public String memberJoin(@Valid JoinFormDto joinFormDto, BindingResult bindingResult, Model model) {
 
-    @PostMapping("/")
-    public String register(RedirectAttributes redirect, Member member) {
-        if (memberServiceImpl.join(member)) {
-            redirect.addAttribute("msg", "회원가입이 완료되었습니다");
-        } else {
-            redirect.addAttribute("msg", "중복된 아이디가 존재합니다.");
+        if (bindingResult.hasErrors()) {
+            return "member/joinForm";
         }
-        return "redirect:/result_alarm";
+
+        try {
+            Member member = Member.createMember(joinFormDto, passwordEncoder);
+            memberService.saveMember(member);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "member/joinForm";
+        }
+        return "redirect:/";
     }
 
-    @GetMapping("/result_alarm")
-    public String result_alarm(@RequestParam("msg") String param, Model model) {
-        model.addAttribute("msg", param);
-        return "result_alarm";
+    // 로그인 페이지
+    @GetMapping("/login")
+    public String memberLogin() {
+        return "member/loginForm";
+    }
+
+    // 로그인 실패
+    @GetMapping("/login/fail")
+    public String memberLoginFail(Model model) {
+        model.addAttribute("loginFailMsg", "아이디 또는 비밀번호를 확인해주세요.");
+        return "member/loginForm";
     }
 }
-
-
