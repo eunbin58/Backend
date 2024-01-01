@@ -1,24 +1,40 @@
 package com.example.backend.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.management.relation.Role;
 
 @Entity
+@Table(name = "member")
+@Getter @Setter
+@ToString
+public class Member extends BaseEntity{
 
-@Table(name = "db_conection")
-public class Member {
     @Id
-    @Column(name = "id",nullable = false,unique = true)
-    private String id;
-    @Column(name = "name",nullable = false)
-    private String name;
+    @Column(name = "member_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-
-    @Column(name = "pw",nullable = false)
-    private String pw;
-    @Column(name = "sex",nullable = false)
-    private boolean sex;
-    @Column(name = "email",nullable = true)
+    @Column(unique = true)
     private String email;
+    private String name;
+    private String address;
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+//    public static Member createMember(JoinFormDto joinFormDto, PasswordEncoder passwordEncoder) {
+//        Member member = new Member();
+//        member.setName(joinFormDto.getName());
+//        member.setEmail(joinFormDto.getEmail());
+//        member.setAddress(joinFormDto.getAddress());
+//        String password = passwordEncoder.encode(joinFormDto.getPassword());
+//        member.setPassword(password);
+//        member.setRole(Role.ADMIN);
+//        return member;
+}
+
